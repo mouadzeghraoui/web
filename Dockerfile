@@ -11,7 +11,7 @@ COPY index.html /usr/share/nginx/html/
 
 # Create necessary directories and set permissions
 RUN mkdir -p /var/cache/nginx /var/run /var/log/nginx \
-    && chmod -R g+rwx /var/cache/nginx /var/run /var/log/nginx /var/lib/nginx /etc/nginx /usr/share/nginx/html
+    && chmod -R g+rwx /var/cache/nginx /var/run /var/log/nginx /etc/nginx /usr/share/nginx/html
 
 # Use a non-root user
 USER 1001
