@@ -1,7 +1,11 @@
 FROM nginx:stable-alpine
 
-# Remove the default NGINX configuration file
+# Remove the default NGINX configuration files
 RUN rm /etc/nginx/conf.d/default.conf
+RUN rm /etc/nginx/nginx.conf
+
+# Copy the custom NGINX configuration
+COPY nginx.conf /etc/nginx/nginx.conf
 
 # Copy the server block configuration
 COPY default.conf /etc/nginx/conf.d/
@@ -12,12 +16,6 @@ COPY index.html /usr/share/nginx/html/
 # Create necessary directories and set permissions
 RUN mkdir -p /var/cache/nginx /var/run /var/log/nginx \
     && chmod -R g+rwx /var/cache/nginx /var/run /var/log/nginx /etc/nginx /usr/share/nginx/html
-
-# Modify main NGINX configuration
-RUN sed -i 's/user  nginx;//g' /etc/nginx/nginx.conf \
-    && sed -i 's,listen       80;,listen       8080;,' /etc/nginx/conf.d/default.conf \
-    && sed -i 's,/var/run/nginx.pid,/tmp/nginx.pid,' /etc/nginx/nginx.conf \
-    && sed -i '/^http {/a \    client_body_temp_path /tmp/client_temp;\n    proxy_temp_path       /tmp/proxy_temp_path;\n    fastcgi_temp_path     /tmp/fastcgi_temp;\n    uwsgi_temp_path       /tmp/uwsgi_temp;\n    scgi_temp_path        /tmp/scgi_temp;\n' /etc/nginx/nginx.conf
 
 # Use a non-root user
 USER 1001
