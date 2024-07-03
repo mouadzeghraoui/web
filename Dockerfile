@@ -1,4 +1,3 @@
-# Use the official NGINX image as a parent image
 FROM nginx:stable-alpine
 
 # Remove the default NGINX configuration file
@@ -10,8 +9,13 @@ COPY nginx.conf /etc/nginx/conf.d/
 # Copy the HTML file to the appropriate location
 COPY index.html /usr/share/nginx/html/
 
-# Expose port 8080
+# Create necessary directories and set permissions
+RUN mkdir -p /var/cache/nginx /var/run /var/log/nginx \
+    && chmod -R g+rwx /var/cache/nginx /var/run /var/log/nginx /var/lib/nginx /etc/nginx /usr/share/nginx/html
+
+# Use a non-root user
+USER 1001
+
 EXPOSE 8080
 
-# Start NGINX
 CMD ["nginx", "-g", "daemon off;"]
